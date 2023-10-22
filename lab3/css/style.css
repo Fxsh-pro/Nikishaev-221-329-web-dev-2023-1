@@ -1,0 +1,185 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Header Nav */
+header nav img {
+  height: 20px;
+}
+
+header {
+  height: 94px;
+  width: 100%;
+  background: #562eff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-wrapper .logo-section img {
+  width: 40.42px;
+  height: 51px;
+}
+
+.nav-wrapper .logo-section {
+  display: flex;
+  align-items: center;
+}
+
+.nav-wrapper .logo-section h2 {
+  padding-left: 15px;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 30px;
+  color: #fff;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+nav ul li {
+  list-style-type: none;
+  display: inline-block;
+  padding-right: 36px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+nav ul li a {
+  color: #fff;
+}
+
+nav img {
+  cursor: pointer;
+}
+
+.languages {
+  background: #fff;
+  border-radius: 5px;
+  padding: 33px;
+  margin: 15px 0;
+}
+
+.container {
+  width: 1200px;
+}
+
+main {
+  background: #f3f1ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.common-heading {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+  color: #562eff;
+  padding-bottom: 10px;
+}
+
+.rating {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px 0;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.rating div img {
+  width: 50px;
+  height: 40px;
+}
+
+.rating div {
+  display: flex;
+  align-items: center;
+}
+
+.rating div h3 {
+  padding-left: 16px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  color: #000;
+}
+.technologies {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.technology-list {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 700px;
+}
+
+.technology {
+  width: 40%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.articles > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px 45px;
+  justify-content: space-around;
+}
+
+.articles > div article {
+  display: flex;
+  width: 48%;
+}
+
+.articles > div h3 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 34px;
+  color: #000000;
+  padding-bottom: 6px;
+}
+
+.articles > div p {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #9f9f9f;
+}
+
+.articles > div p a {
+  color: #562eff;
+}
+
+.articles img {
+  width: 177px;
+  height: 117px;
+  margin-right: 16px;
+}

@@ -1,0 +1,12 @@
+@media print {
+  .container {
+    width: 1050px;
+  }
+  .articles > div article {
+    width: 42%;
+  }
+  header h2,
+  a {
+    color: black !important;
+  }
+}
