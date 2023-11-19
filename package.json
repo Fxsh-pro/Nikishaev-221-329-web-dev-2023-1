@@ -1,0 +1,26 @@
+{
+  "name": "webdevelopment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fxsh-pro/Nikishaev-221-329-web-dev-2023-1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fxsh-pro/Nikishaev-221-329-web-dev-2023-1/issues"
+  },
+  "homepage": "https://github.com/Fxsh-pro/Nikishaev-221-329-web-dev-2023-1#readme",
+  "devDependencies": {
+    "eslint": "^8.54.0"
+  }
+}
