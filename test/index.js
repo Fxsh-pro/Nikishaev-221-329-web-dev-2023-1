@@ -1,30 +1,29 @@
-// function fibb(n) {
-//     if (n <= 1) {
-//         return n;
-//     }
-//     return fibb(n - 1) + fibb(n - 2);
-// }
-// fibb(10); // Рекурсивный метод
+function cesar(str, shift, action) {
+    let alphabet = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+    alphabet += alphabet.toUpperCase();
 
-function fibb(n) {
-    if (n <= 1) {
-        return n;
+    let result = '';
+    for (let i = 0; i < str.length; i++) {
+        let char = str[i];
+        if (alphabet.includes(char)) {
+            let charIndex = alphabet.indexOf(char);
+            if (action === 'encode') {
+                charIndex = (charIndex + shift) % alphabet.length;
+            } else if (action === 'decode') {
+                charIndex = Math.abs((charIndex - shift)) % alphabet.length;
+            }
+            result += alphabet[charIndex];
+        } else {
+            result += str[i];
+        }
     }
-    let a = 0;
-    let b = 1;
-    let temp;
-    for (let i = 2; i <= n; i++) {
-        temp = a + b;
-        a = b;
-        b = temp;
-    }
-    return b;
+    return result;
 }
 
-console.log(fibb(15))
+let originalMessage = 'эзтыхз фзъзъз';
+for (let i = 0; i < 100; i++) {
+    let encryptedMessage = cesar(originalMessage, i, 'decode'); 
+    console.log(encryptedMessage, i)
+}
 
-
-
-
-
-
+// хакуна матата shift = 8
