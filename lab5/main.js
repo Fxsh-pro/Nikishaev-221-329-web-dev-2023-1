@@ -128,7 +128,6 @@ function pageBtnHandler(event) {
     }
 }
 
-//
 function clearCompleteOptions() {
     let options = document.getElementById('search-options');
     options.style.display = 'none';
