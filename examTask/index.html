@@ -97,15 +97,28 @@
 </main>
 
 <div class="container mt-4">
-    <h2 class="mb-4">Информация о маршрутах</h2>
-
+    <h2 class="mb-4">Список пешеходный маршрутов</h2>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="input-group">
+                <label class="input-group-text" id="searchIcon" for='routes-search'>
+                    <i class="fas fa-search"></i>
+                </label>
+                <input type="text" class="form-control" placeholder="Поиск по названию" aria-describedby="searchIcon" id = "routes-search">
+            </div>
+        </div>
+        <div class="col-md-6 mt-md-0 mt-1 ">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Выберите основной объект</option>
+            </select>
+        </div>
+    </div>
     <table class="table table-bordered" id="routesTable">
         <thead class="table-danger">
-        <tr>
+        <tr class="text-center fs-6">
             <th scope="col">Название</th>
             <th scope="col">Описание</th>
             <th scope="col">Основные объекты</th>
-            <th scope="col">Выбрать</th>
         </tr>
         </thead>
         <tbody></tbody>
