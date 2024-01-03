@@ -1,0 +1,30 @@
+#mainNav > .container img {
+    height: 40px;
+    width: 50px;
+}
+
+#mainNav {
+    background-color: #e5a56f;
+}
+
+header {
+    background-color: #e12b55;
+}
+
+header img {
+    height: 200px;
+}
+
+main {
+    background-color: #e4e4e4;
+}
+
+main img {
+    height: 225px;
+    width: 220px;
+    border-radius: 5px;
+}
+
+.navbar {
+    background-color: #e5a56f;
+}
