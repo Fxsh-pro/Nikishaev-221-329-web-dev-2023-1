@@ -104,7 +104,8 @@
                 <label class="input-group-text" id="searchIcon" for='routes-search'>
                     <i class="fas fa-search"></i>
                 </label>
-                <input type="text" class="form-control" placeholder="Поиск по названию" aria-describedby="searchIcon" id = "routes-search">
+                <input type="text" class="form-control" placeholder="Поиск по названию" aria-describedby="searchIcon"
+                       id="routes-search">
             </div>
         </div>
         <div class="col-md-6 mt-md-0 mt-1 ">
@@ -128,6 +129,42 @@
 
         </ul>
     </nav>
+</div>
+
+<div id="guidesTableContainer" class="container mt-4">
+    <h2>Доступные гиды по маршруту</h2>
+    <div class="row mt-3 align-items-center">
+        <div class="col-md-3">
+            <select id="languageFilter" class="form-select">
+                <option value="">Язык экскурсии</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center"> Опыт работы:</div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <label class="input-group-text" for="minExperience">от</label>
+                <input type="text" id="minExperience" class="form-control form-control-sm">
+                <label class="input-group-text" for="maxExperience">до</label>
+                <input type="text" id="maxExperience" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="col-md-2 text-center mt-md-0 mt-2">
+            <button class="btn btn-primary" id = "guidesFilterBtn">Поиск</button>
+        </div>
+    </div>
+    <table id="guidesTable" class="table table-bordered mt-2">
+        <thead>
+        <tr>
+            <th>Фото</th>
+            <th>ФИО</th>
+            <th>Языки</th>
+            <th>Опыт</th>
+            <th>Стоимость</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

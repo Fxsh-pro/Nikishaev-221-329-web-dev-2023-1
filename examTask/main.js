@@ -1,7 +1,10 @@
-var routes;
-var filteredRoutes;
-var currentPage = 0;
-var routesPerPage = 3;
+let routes;
+let filteredRoutes;
+let currentPage = 0;
+let routesPerPage = 3;
+let selectedRouteId = -1;
+let guids;
+let filteredGuids;
 
 function fetchAndPopulateRoutes(apiUrl) {
     fetch(apiUrl)
@@ -16,6 +19,86 @@ function fetchAndPopulateRoutes(apiUrl) {
         .catch(error => console.error('Error fetching routes:', error));
 }
 
+function fetchAndPopulateGuides() {
+    const apiUrl = new URL(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes/${selectedRouteId}/guides`);
+    apiUrl.searchParams.set('api_key', '99bc2746-b676-49f8-9383-984c72aa1141');
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            guids = data;
+            filteredGuids = [...data];
+            fillLanguageOptions();
+            populateGuidesTable();
+        })
+        .catch(error => console.error('Error fetching guides:', error));
+}
+
+function populateGuidesTable() {
+    const tableBody = document.querySelector('#guidesTable tbody');
+    tableBody.innerHTML = '';
+
+    filteredGuids.forEach(guide => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class = 'd-flex align-items-center justify-content-around'>
+                 <img src="images/account1.png" alt=""> 
+                 <button class="btn btn-success guide-select-button" data-guide-id="${guide.id}">Выбрать</button>
+            </td>
+            <td>${guide.name}</td>
+            <td>${guide.language}</td>
+            <td>${guide.workExperience}</td>
+            <td>${guide.pricePerHour}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+    document.getElementById('guidesTableContainer').style.display = 'block';
+
+    document.querySelectorAll('.guide-select-button').forEach(btn => {
+        btn.onclick = () => {
+            chooseGuide(btn.dataset.guideId);
+        };
+    });
+}
+
+chooseGuide = function (guideId) {
+    console.log(guideId);
+};
+
+function fillLanguageOptions() {
+    var selectElement = document.querySelector('#languageFilter');
+    selectElement.innerHTML = '';
+    const uniqueLanguages = new Set();
+    selectElement.appendChild(createOption('Язык экскурсии'));
+    filteredGuids.forEach(guide => {
+        uniqueLanguages.add(guide.language);
+    })
+    uniqueLanguages.forEach(language => {
+        selectElement.appendChild(createOption(language));
+    });
+}
+
+document.getElementById('guidesFilterBtn').onclick = () => {
+    const language = document.getElementById('languageFilter').value;
+    const minExp = parseInt(document.getElementById('minExperience').value);
+    const maxExp = parseInt(document.getElementById('maxExperience').value);
+
+    if (language === 'Язык экскурсии' && isNaN(minExp) && isNaN(maxExp)) {
+        filteredGuids = [...guids];
+    } else {
+        filteredGuids = guids.filter(guide => (
+            (language === 'Язык экскурсии' || guide.language === language) &&
+            (isNaN(minExp) || parseInt(guide.workExperience) >= minExp) &&
+            (isNaN(maxExp) || parseInt(guide.workExperience) <= maxExp)
+        ));
+        if (filteredGuids.length === 0) {
+            showAlert("Извините, гидов с такими критериями не найдено");
+        }
+    }
+    populateGuidesTable();
+}
+
+
 function populateTable() {
     const tableBody = document.querySelector('#routesTable tbody');
     tableBody.innerHTML = '';
@@ -25,11 +108,14 @@ function populateTable() {
         row.innerHTML = `
             <td class = 'text-center'>
                 <h5>${filteredRoutes[i].name}</h5>
-                <button class="btn btn-success btn-sm route-select-button" data-route-id="${routes[i].id}">Записаться</button>
+                <button class="btn btn-success btn-sm route-select-button" data-route-id="${filteredRoutes[i].id}">Записаться</button>
             </td>
             <td>${filteredRoutes[i].description}</td>
             <td>${filteredRoutes[i].mainObject}</td>
         `;
+        if (selectedRouteId == filteredRoutes[i].id) {
+            row.classList.add('selected-route');
+        }
         tableBody.appendChild(row);
     }
 
@@ -54,38 +140,44 @@ function createPaginationButton(content) {
 function fillRouteFilterOptions() {
     var selectElement = document.querySelector('.form-select');
     selectElement.innerHTML = '';
+    const uniqueNames = new Set();
+    selectElement.appendChild(createOption("Не выбрано"));
     filteredRoutes.forEach(route => {
         const names = extractNames(route.mainObject);
         names.forEach(name => {
-            const option = document.createElement('option');
-            option.value = name;
-            option.text = name;
-            selectElement.appendChild(option);
+            uniqueNames.add(name);
         });
+    });
+    uniqueNames.forEach(name => {
+        selectElement.appendChild(createOption(name));
     });
 }
 
+function createOption(content) {
+    const option = document.createElement('option');
+    option.value = content;
+    option.text = content;
+    return option;
+}
+
 function extractNames(inputString) {
-    const separators = ['-', '«', '»'];
     const matches = [];
     let startIndex = 0;
+    let left, right;
 
     while (startIndex < inputString.length) {
-        let minIndex = inputString.length;
-
-        separators.forEach(separator => {
-            const index = inputString.indexOf(separator, startIndex);
-            if (index !== -1 && index < minIndex) {
-                minIndex = index;
+        left = inputString.indexOf('«', startIndex);
+        if (left !== -1) {
+            right = inputString.indexOf('»', left + 1);
+            if (right !== -1) {
+                const word = inputString.slice(left + 1, right).trim();
+                if (word.length > 0 && word.length < 15) {
+                    matches.push(word);
+                }
+                startIndex = right + 1;
+            } else {
+                break;
             }
-        });
-
-        if (minIndex < inputString.length) {
-            const name = inputString.slice(startIndex, minIndex).trim().substring(0, 25);
-            if (name.length > 0) {
-                matches.push(name);
-            }
-            startIndex = minIndex + 1;
         } else {
             break;
         }
@@ -125,20 +217,27 @@ function setupPagination() {
     pagination.appendChild(next);
 }
 
-document.getElementById('searchIcon').addEventListener('click', () => {
+document.getElementById('searchIcon').onclick = filterRoutes;
+document.querySelector('.form-select').onchange = filterRoutes;
+
+function filterRoutes() {
     const searchValue = document.getElementById('routes-search').value.toLowerCase().trim();
-    if (searchValue.length === 0) {
+    const selectedWord = document.querySelector('.form-select').value;
+    if (searchValue.length === 0 && selectedWord === "Не выбрано") {
         filteredRoutes = [...routes];
     } else {
-        filteredRoutes = routes.filter(route => route.name.toLowerCase().includes(searchValue));
+        filteredRoutes = routes.filter(route =>
+            (route.name.toLowerCase().includes(searchValue) || searchValue.length === 0) &&
+            (route.mainObject.includes(selectedWord) || selectedWord === "Не выбрано")
+        );
         if (filteredRoutes.length === 0) {
-            showAlert("Извините, маршрутов с таким названием не найдено");
+            showAlert("Извините, маршрутов с такими критериями не найдено");
         }
     }
     currentPage = 0;
     populateTable();
     setupPagination();
-});
+}
 
 function showAlert(message) {
     const alertContainer = document.querySelector('#notifications .container');
@@ -156,13 +255,15 @@ function showAlert(message) {
 }
 
 chooseRoute = function (routeId) {
-    console.log('Route chosen with ID:', routeId);
+    selectedRouteId = routeId;
+    populateTable();
+    fetchAndPopulateGuides(routeId);
 };
 
 window.onload = function () {
-    const apiUrl = new URL('http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes');
-    apiUrl.searchParams.set('api_key', '99bc2746-b676-49f8-9383-984c72aa1141');
-    fetchAndPopulateRoutes(apiUrl);
+    const allRoutesUrl = new URL('http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes');
+    allRoutesUrl.searchParams.set('api_key', '99bc2746-b676-49f8-9383-984c72aa1141');
+    fetchAndPopulateRoutes(allRoutesUrl);
 };
 
 

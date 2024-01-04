@@ -28,3 +28,17 @@ main img {
 .navbar {
     background-color: #e5a56f;
 }
+
+.selected-route {
+    --bs-table-bg: #94e7b4;
+/ / Надо было переопределить bg из cdn bootstrap
+}
+
+#guidesTableContainer {
+    display: none;
+}
+
+#guidesTableContainer img {
+    width: 30px;
+}
+
