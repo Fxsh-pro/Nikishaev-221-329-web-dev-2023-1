@@ -1,0 +1,8 @@
+#mainNav > .container img {
+    height: 40px;
+    width: 50px;
+}
+
+#mainNav {
+    background-color: #e5a56f;
+}

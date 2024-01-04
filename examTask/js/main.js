@@ -3,8 +3,10 @@ let filteredRoutes;
 let currentPage = 0;
 let routesPerPage = 3;
 let selectedRouteId = -1;
+let selectedRouteName = '';
 let guids;
 let filteredGuids;
+let selectedGuidPrice;
 
 function fetchAndPopulateRoutes(apiUrl) {
     fetch(apiUrl)
@@ -42,8 +44,8 @@ function populateGuidesTable() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class = 'd-flex align-items-center justify-content-around'>
-                 <img src="images/account1.png" alt=""> 
-                 <button class="btn btn-success guide-select-button" data-guide-id="${guide.id}">Выбрать</button>
+                 <img src="images/account.png" alt=""> 
+                 <button class="btn btn-success guide-select-button" data-guid-name="${guide.name}" data-guid-price="${guide.pricePerHour}" data-bs-toggle="modal" data-bs-target="#reservationModal">Выбрать</button>
             </td>
             <td>${guide.name}</td>
             <td>${guide.language}</td>
@@ -56,14 +58,18 @@ function populateGuidesTable() {
 
     document.querySelectorAll('.guide-select-button').forEach(btn => {
         btn.onclick = () => {
-            chooseGuide(btn.dataset.guideId);
+            chooseGuide(btn.dataset.guidName, btn.dataset.guidPrice);
         };
     });
 }
 
-chooseGuide = function (guideId) {
-    console.log(guideId);
+chooseGuide = (guideName, guidPricePerHour) => {
+    document.querySelector('#modalGuidInfo #guideName').innerHTML = guideName;
+    document.querySelector('#modalRouteInfo #routeName').innerHTML = selectedRouteName;
+    selectedGuidPrice = guidPricePerHour;
+    console.log(selectedGuidPrice)
 };
+
 
 function fillLanguageOptions() {
     var selectElement = document.querySelector('#languageFilter');
@@ -108,7 +114,7 @@ function populateTable() {
         row.innerHTML = `
             <td class = 'text-center'>
                 <h5>${filteredRoutes[i].name}</h5>
-                <button class="btn btn-success btn-sm route-select-button" data-route-id="${filteredRoutes[i].id}">Записаться</button>
+                <button class="btn btn-success btn-sm route-select-button" data-route-id="${filteredRoutes[i].id}" data-route-name="${filteredRoutes[i].name}" >Записаться</button>
             </td>
             <td>${filteredRoutes[i].description}</td>
             <td>${filteredRoutes[i].mainObject}</td>
@@ -121,7 +127,7 @@ function populateTable() {
 
     document.querySelectorAll('.route-select-button').forEach(btn => {
         btn.onclick = function () {
-            chooseRoute(btn.dataset.routeId);
+            chooseRoute(btn.dataset.routeId, btn.dataset.routeName);
         };
     });
 }
@@ -254,8 +260,9 @@ function showAlert(message) {
     }, 3000);
 }
 
-chooseRoute = function (routeId) {
+chooseRoute = function (routeId, routeName) {
     selectedRouteId = routeId;
+    selectedRouteName = routeName;
     populateTable();
     fetchAndPopulateGuides(routeId);
 };
@@ -266,4 +273,20 @@ window.onload = function () {
     fetchAndPopulateRoutes(allRoutesUrl);
 };
 
+function calculateTotalCost() {
+    const guideServiceCost = selectedGuidPrice;
+    const hoursNumber = parseInt(document.getElementById('duration').value);
+    const isThisDayOff = 1
+    const isItMorning = 0
+    const isItEvening = 0
+    const numberOfVisitors = parseInt(document.getElementById('peopleCount').value);
 
+    let totalCost = guideServiceCost * hoursNumber * isThisDayOff + isItMorning + isItEvening + numberOfVisitors;
+    document.getElementById('totalCost').innerText = `${totalCost}`;
+    showAlert("sdfdf")
+
+    return totalCost;
+}
+document.getElementById('modal-submit').onclick = event => {
+    calculateTotalCost();
+}
