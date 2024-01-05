@@ -1,3 +1,4 @@
+const api_key = '99bc2746-b676-49f8-9383-984c72aa1141';
 let routes;
 let filteredRoutes;
 let currentPage = 0;
@@ -7,6 +8,7 @@ let selectedRouteName = '';
 let guids;
 let filteredGuids;
 let selectedGuidPrice;
+let selectedGuidId;
 
 function fetchAndPopulateRoutes(apiUrl) {
     fetch(apiUrl)
@@ -23,7 +25,7 @@ function fetchAndPopulateRoutes(apiUrl) {
 
 function fetchAndPopulateGuides() {
     const apiUrl = new URL(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes/${selectedRouteId}/guides`);
-    apiUrl.searchParams.set('api_key', '99bc2746-b676-49f8-9383-984c72aa1141');
+    apiUrl.searchParams.set('api_key', api_key);
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -45,7 +47,7 @@ function populateGuidesTable() {
         row.innerHTML = `
             <td class = 'd-flex align-items-center justify-content-around'>
                  <img src="images/account.png" alt=""> 
-                 <button class="btn btn-success guide-select-button" data-guid-name="${guide.name}" data-guid-price="${guide.pricePerHour}" data-bs-toggle="modal" data-bs-target="#reservationModal">Выбрать</button>
+                 <button class="btn btn-success guide-select-button" data-guid-id="${guide.id}" data-guid-name="${guide.name}" data-guid-price="${guide.pricePerHour}" data-bs-toggle="modal" data-bs-target="#reservationModal">Выбрать</button>
             </td>
             <td>${guide.name}</td>
             <td>${guide.language}</td>
@@ -58,16 +60,16 @@ function populateGuidesTable() {
 
     document.querySelectorAll('.guide-select-button').forEach(btn => {
         btn.onclick = () => {
-            chooseGuide(btn.dataset.guidName, btn.dataset.guidPrice);
+            chooseGuide(btn.dataset.guidName, btn.dataset.guidPrice, btn.dataset.guidId);
         };
     });
 }
 
-chooseGuide = (guideName, guidPricePerHour) => {
+chooseGuide = (guideName, guidPricePerHour, guideId) => {
     document.querySelector('#modalGuidInfo #guideName').innerHTML = guideName;
     document.querySelector('#modalRouteInfo #routeName').innerHTML = selectedRouteName;
     selectedGuidPrice = guidPricePerHour;
-    console.log(selectedGuidPrice)
+    selectedGuidId = guideId;
 };
 
 
@@ -98,7 +100,7 @@ document.getElementById('guidesFilterBtn').onclick = () => {
             (isNaN(maxExp) || parseInt(guide.workExperience) <= maxExp)
         ));
         if (filteredGuids.length === 0) {
-            showAlert("Извините, гидов с такими критериями не найдено");
+            showAlert("Извините, гидов с такими критериями не найдено", 'alert-warning');
         }
     }
     populateGuidesTable();
@@ -237,7 +239,7 @@ function filterRoutes() {
             (route.mainObject.includes(selectedWord) || selectedWord === "Не выбрано")
         );
         if (filteredRoutes.length === 0) {
-            showAlert("Извините, маршрутов с такими критериями не найдено");
+            showAlert("Извините, маршрутов с такими критериями не найдено", 'alert-warning');
         }
     }
     currentPage = 0;
@@ -245,10 +247,11 @@ function filterRoutes() {
     setupPagination();
 }
 
-function showAlert(message) {
+
+function showAlert(message, alertType) {
     const alertContainer = document.querySelector('#notifications .container');
     const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', 'alert-warning', 'alert-dismissible', 'm-0', 'my-2');
+    alertDiv.classList.add('alert', alertType, 'alert-dismissible', 'm-0', 'my-2');
     alertDiv.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -257,7 +260,7 @@ function showAlert(message) {
     window.scrollTo({top: 0, behavior: 'smooth'});
     setTimeout(() => {
         alertDiv.remove();
-    }, 3000);
+    }, 4000);
 }
 
 chooseRoute = function (routeId, routeName) {
@@ -269,7 +272,7 @@ chooseRoute = function (routeId, routeName) {
 
 window.onload = function () {
     const allRoutesUrl = new URL('http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes');
-    allRoutesUrl.searchParams.set('api_key', '99bc2746-b676-49f8-9383-984c72aa1141');
+    allRoutesUrl.searchParams.set('api_key', api_key);
     fetchAndPopulateRoutes(allRoutesUrl);
 };
 
@@ -283,10 +286,181 @@ function calculateTotalCost() {
 
     let totalCost = guideServiceCost * hoursNumber * isThisDayOff + isItMorning + isItEvening + numberOfVisitors;
     document.getElementById('totalCost').innerText = `${totalCost}`;
-    showAlert("sdfdf")
+    //
+    // const api_key = '99bc2746-b676-49f8-9383-984c72aa1141';
+    // let url = `http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${api_key}`;
 
-    return totalCost;
+    // let xhr = new XMLHttpRequest();
+    // xhr.open("POST", url);
+    // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    // xhr.responseType = "json";
+    //
+    // formData.append("guide_id", selectedRouteId.toString());
+    // formData.append("route_id", selectedRouteId.toString());
+    // formData.append("date", document.getElementById('excursionDate').value.toString());
+    // formData.append("time", document.getElementById('excursionStartTime').value.toString());
+    // formData.append("duration", hoursNumber.toString());
+    // formData.append("persons", numberOfVisitors.toString());
+    // formData.append("price", totalCost.toString());
+    // formData.append("optionFirst", document.getElementById('option1').checked.toString());
+    // formData.append("optionSecond", document.getElementById('option2').checked.toString());
+    // formData.append("student_id", '1');
+    // formData.append("id",'3');
+    // console.log(formData)
+
+    const url = `http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${api_key}`;
+
+    const formData = new FormData();
+
+    formData.append("id", '1');
+    formData.append("guide_id", '78');
+    formData.append("route_id", '2');
+    formData.append("date", '2024-02-02');
+    formData.append("time", '17:30');
+    formData.append("duration", '1');
+    formData.append("persons", '1');
+    formData.append("price", '1');
+    formData.append("optionFirst", '1');
+    formData.append("optionSecond", '1');
+    formData.append("student_id", '1');
+
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+    })
+
+    // return totalCost;
 }
+
 document.getElementById('modal-submit').onclick = event => {
-    calculateTotalCost();
+    const errorMessage = validateRequest()
+    if (errorMessage.length !== 0) {
+        showAlert(errorMessage, 'alert-danger');
+    } else {
+        createExcursion();
+        showAlert('Вы записались на эксукрсию!', 'alert-success');
+    }
 }
+const createExcursion = () => {
+    const createExcursionUrl = `http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders?api_key=${api_key}`;
+
+    const optionFirst = document.getElementById('option1').checked ? 1 : 0;
+    const optionSecond = document.getElementById('option2').checked ? 1 : 0;
+
+    const formData = new FormData();
+
+    formData.append("guide_id", selectedGuidId);
+    formData.append("route_id", selectedRouteId);
+    formData.append("date", document.getElementById('excursionDate').value);
+    formData.append("time",  document.getElementById('excursionStartTime').value);
+    formData.append("duration", document.getElementById('duration').value);
+    formData.append("persons", document.getElementById('peopleCount').value);
+    formData.append("price", calculatePrice().toString());
+    formData.append("optionFirst", optionFirst.toString());
+    formData.append("optionSecond", optionSecond.toString());
+
+    fetch(createExcursionUrl, {
+        method: 'POST',
+        body: formData,
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data as needed
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+const validateRequest = () => {
+    let errors = [validateDate(), validateTime(), validatePersonsCount()];
+    let errorMessage = errors.filter(error => error.length !== 0).join('<br>');
+    return errorMessage;
+}
+const validateDate = () => {
+    let date = new Date(document.getElementById('excursionDate').value);
+    if (isNaN(date)) {
+        return "Дата экскурсии должна быть заполнена";
+    }
+    if (date < new Date()) {
+        return "Дата экскурсии не может быть ранее или равна текущей дате";
+    }
+    return '';
+}
+
+const validateTime = () => {
+    const time = document.getElementById('excursionStartTime').value.trim();
+    const timeRegex = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+    if (time.length === 0) {
+        return "Время экскурсии должно быть заполнена";
+    }
+    if (timeRegex.test(time)) {
+        const [hours, minutes] = time.split(':').map(Number);
+        if (hours >= 9 && hours < 23 && minutes >= 0 && minutes < 60) {
+            return '';
+        } else {
+            return 'Время должно соответствовать диапазону 9-23 часов';
+        }
+    } else {
+        return 'Время должно соответствовать шаблону HH:MM';
+    }
+}
+const validatePersonsCount = () => {
+    let personsCount = document.getElementById('peopleCount').value.trim();
+    if (personsCount.length === 0) {
+        return "Количество людей должно быть заполнено";
+    }
+    try {
+        personsCount = Number(personsCount);
+    } catch (e) {
+        return "Количество людей должно быть числом"
+    }
+    if (!(personsCount > 0 && personsCount < 21)) {
+        return "Размер экскурсионной группы может составлять от 1 до 20 человек"
+    }
+    return '';
+}
+
+const calculatePrice = () => {
+    const date = new Date(document.getElementById('excursionDate').value);
+    const time = document.getElementById('excursionStartTime').value.trim();
+    const personsCount = document.getElementById('peopleCount').value.trim();
+    const duration = parseInt(document.getElementById('duration').value)
+    const option1 = document.getElementById('option1').checked;
+    const option2 = document.getElementById('option2').checked;
+    let isThisDayOff;
+    if (validateDate() === '') {
+        isThisDayOff = date.getDay() === 0 || date.getDay() === 6 ? 1.5 : 1;
+    } else {
+        isThisDayOff = 1;
+    }
+    let hour;
+    if (validateTime() === '') {
+        hour = time.split(':').map(Number)[0];
+    } else {
+        hour = 15;
+    }
+    const isItMorning = hour < 12 ? 400 : 0;
+    const isItEvening = hour >= 20 ? 1000 : 0;
+    let numberOfVisitor;
+    if (validatePersonsCount() === '') {
+        numberOfVisitor = personsCount < 5 ? 0 :
+            personsCount <= 10 ? 1000 :
+                1500;
+    } else {
+        numberOfVisitor = 1;
+    }
+
+    let totalPrice = selectedGuidPrice * duration * isThisDayOff + isItMorning + isItEvening + numberOfVisitor;
+    if (option1) totalPrice *= 1.3;
+    if (option2) totalPrice += 500 * personsCount;
+    document.getElementById('totalCost').innerHTML = Math.round(totalPrice).toString();
+    return Math.round(totalPrice);
+}
+
+const modalInputIds = ['duration', 'excursionDate', 'excursionStartTime', 'peopleCount', 'option1', 'option2'];
+modalInputIds.forEach(id => {
+    document.getElementById(id).onchange = calculatePrice;
+})
+document.getElementById('excursionStartTime').onblur = calculatePrice;

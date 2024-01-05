@@ -170,8 +170,6 @@
 <div class="modal" id="reservationModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
-            <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title">Оформление заявки</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -179,7 +177,6 @@
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form id="reservationForm">
                 <div class="mb-3 d-flex align-items-center " id="modalGuidInfo">
                     <h6 class="m-0">ФИО гида:</h6>
                     <p id="guideName" class=" m-0 ms-1"></p>
@@ -198,7 +195,7 @@
 
                     <div class="col-lg-4">
                         <label for="excursionStartTime" class="form-label">Время начала экскурсии:</label>
-                        <input type="text" class="form-control" id="excursionStartTime" required>
+                        <input type="text" class="form-control" id="excursionStartTime" required placeholder="В формате HH:MM">
                     </div>
 
                     <div class="col-lg-4">
@@ -243,9 +240,10 @@
 
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ОТМЕНИТЬ</button>
-                    <button type="submit" class="btn btn-success ms-2" id="modal-submit">ОТПРАВИТЬ</button>
+                    <button type="submit" class="btn btn-success ms-2" id="modal-submit" data-bs-dismiss="modal">
+                        ОТПРАВИТЬ
+                    </button>
                 </div>
-                </form>
             </div>
         </div>
     </div>

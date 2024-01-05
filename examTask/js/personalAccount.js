@@ -5,7 +5,7 @@ function populateReservationsTable(reservations) {
     reservations.forEach(reservation => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${reservation.date}</td>
+            <td>${reservation.id}</td>
             <td>${reservation.name}</td>
             <td>${reservation.date}</td>
             <td>${reservation.price}</td>
