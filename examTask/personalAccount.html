@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="personalAccount.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
@@ -20,7 +21,11 @@
             </div>
             <div class="col-9 offset-1 ">
                 <h5 class="m-0 text-end">Москва с огоньком</h5>
-                <p class="m-0 text-end">Экскурсии по Москве</p>
+                <p class="m-0 text-end">
+                    <a class="link fs-6 text-white fw-normal" href="index.html">
+                        Экскурсии по Москве
+                    </a>
+                </p>
             </div>
         </div>
         <a href="personalAccount.html"><img src="images/account1.png" alt=""></a>
@@ -126,9 +131,11 @@
                         <p id="totalCost" class=" m-0 ms-1"></p>
                     </div>
 
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end buttons">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ОТМЕНИТЬ</button>
-                        <button type="submit" class="btn btn-success ms-2" id="modal-submit">ОТПРАВИТЬ</button>
+                        <button type="button" class="btn btn-success ms-2" id="modal-submit" data-bs-dismiss="modal">
+                            ОТПРАВИТЬ
+                        </button>
                     </div>
                 </form>
             </div>
