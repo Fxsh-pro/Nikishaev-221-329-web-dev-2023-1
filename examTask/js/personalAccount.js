@@ -54,7 +54,8 @@ function populateReservationsTable() {
 
 const viewReservation = (event) => {
     toggleModalInputs(true);
-    loadReservationInfoApiRequest(event.target.dataset.reservationId)
+    lastReservationId = event.target.dataset.reservationId
+    loadReservationInfoApiRequest()
 }
 const editReservation = (event) => {
     toggleModalInputs(false);
