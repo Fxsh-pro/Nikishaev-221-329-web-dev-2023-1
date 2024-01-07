@@ -1,44 +1,43 @@
 #mainNav > .container img {
-    height: 40px;
-    width: 50px;
+  height: 40px;
+  width: 50px;
 }
 
 #mainNav {
-    background-color: #e5a56f;
+  background-color: #e5a56f;
 }
 
 header {
-    background-color: #e12b55;
+  background-color: #e12b55;
 }
 
 header img {
-    height: 200px;
+  height: 200px;
 }
 
 main {
-    background-color: #e4e4e4;
+  background-color: #e4e4e4;
 }
 
 main img {
-    height: 225px;
-    width: 220px;
-    border-radius: 5px;
+  height: 225px;
+  width: 220px;
+  border-radius: 5px;
 }
 
 .navbar {
-    background-color: #e5a56f;
+  background-color: #e5a56f;
 }
 
 .selected-route {
-    --bs-table-bg: #94e7b4;
-/ / Надо было переопределить bg из cdn bootstrap
+  --bs-table-bg: #94e7b4;
+  /* // Надо было переопределить bg из cdn bootstrap */
 }
 
 #guidesTableContainer {
-    display: none;
+  display: none;
 }
 
 #guidesTableContainer img {
-    width: 30px;
+  width: 30px;
 }
-
