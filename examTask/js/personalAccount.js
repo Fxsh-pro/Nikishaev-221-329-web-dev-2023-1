@@ -1,8 +1,10 @@
 const api_key = '99bc2746-b676-49f8-9383-984c72aa1141';
 const routeIdsToNamesMap = new Map();
+const itemsPerPage = 3;
 let reservations;
 let selectedGuidPrice;
 let lastReservationId;
+let currentPage = 0;
 
 const fetchAndCreateRouteMap = () => {
     const routesUrl = new URL('http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/routes');
@@ -22,7 +24,8 @@ function populateReservationsTable() {
     const tableBody = document.getElementById('ordersTableBody');
     tableBody.innerHTML = '';
 
-    reservations.forEach(reservation => {
+    for (let i = currentPage * itemsPerPage; i < Math.min(reservations.length, currentPage * itemsPerPage + itemsPerPage); i++) {
+        const reservation = reservations[i];
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${reservation.id}</td>
@@ -32,11 +35,11 @@ function populateReservationsTable() {
             <td class="d-flex align-items-center justify-content-around">
                 <i class="bi bi-eye reservation-action" data-reservation-id="${reservation.id}" data-bs-toggle="modal" data-bs-target="#reservationModal"></i>
                 <i class="bi bi-pencil-square reservation-action" data-reservation-id="${reservation.id}" data-bs-toggle="modal" data-bs-target="#reservationModal"></i>
-                <i class="bi bi-trash delete-reservation" data-reservation-id="${reservation.id}"></i>   
+                <i class="bi bi-trash delete-reservation" data-reservation-id="${reservation.id}" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"></i>   
             </td>
         `;
         tableBody.appendChild(row);
-    });
+    }
 
     document.querySelectorAll('.bi-eye').forEach(icon => {
         icon.onclick = viewReservation;
@@ -44,8 +47,8 @@ function populateReservationsTable() {
     document.querySelectorAll('.bi-pencil-square').forEach(icon => {
         icon.onclick = editReservation;
     });
-    document.querySelectorAll('.bi-trash').forEach(icon => {
-        icon.onclick = deleteReservation;
+    document.querySelectorAll('.bi-pencil-square').forEach(icon => {
+        lastReservationId = icon.dataset.reservationId;
     });
 }
 
@@ -59,7 +62,7 @@ const editReservation = (event) => {
     loadReservationInfoApiRequest();
 }
 const deleteReservation = (event) => {
-    deleteReservationApiRequest(event.target.dataset.reservationId).then(
+    deleteReservationApiRequest(lastReservationId).then(
         () => fetchAndPopulateReservationsApiRequest()
     );
 }
@@ -72,6 +75,7 @@ const fetchAndPopulateReservationsApiRequest = () => {
         .then(reservationsList => {
             reservations = reservationsList;
             populateReservationsTable();
+            setupPagination();
         })
         .catch(error => console.error('Error fetching reservations:', error));
 }
@@ -227,6 +231,7 @@ modalInputIds.forEach(id => {
     }
 })
 document.getElementById('excursionStartTime').onblur = calculatePrice;
+document.getElementById('confirmDeleteBtn').onclick = deleteReservation;
 
 document.getElementById('modal-submit').onclick = event => {
     console.log("HERE1")
@@ -282,3 +287,44 @@ const showAlert = (message, alertType) => {
         alertDiv.remove();
     }, 4000);
 }
+
+const createPaginationButton = (content) => {
+    const li = document.createElement('li');
+    li.classList.add('page-item');
+    const a = document.createElement('a');
+    a.classList.add('page-link');
+    a.href = '#pagination';
+    a.innerHTML = content;
+    li.appendChild(a);
+    return li;
+};
+
+const setupPagination = () => {
+    const totalPages = Math.ceil(reservations.length / itemsPerPage);
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    let prev = createPaginationButton('<span aria-hidden="true">&laquo;</span>');
+    prev.onclick = function () {
+        currentPage = Math.max(0, currentPage - 3);
+        setupPagination();
+    };
+    pagination.appendChild(prev);
+
+    for (let i = 0; i <= Math.min(totalPages - 1, currentPage + 3); i++) {
+        let item = createPaginationButton(i);
+        item.onclick = function () {
+            currentPage = i;
+            populateReservationsTable();
+        };
+        pagination.appendChild(item);
+    }
+
+    let next = createPaginationButton('<span aria-hidden="true">&raquo;</span>');
+    next.onclick = function () {
+        if (currentPage + 3 < totalPages - 1) {
+            currentPage = currentPage + 3;
+            setupPagination();
+        }
+    };
+    pagination.appendChild(next);
+};
