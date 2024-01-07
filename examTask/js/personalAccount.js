@@ -47,8 +47,8 @@ function populateReservationsTable() {
     document.querySelectorAll('.bi-pencil-square').forEach(icon => {
         icon.onclick = editReservation;
     });
-    document.querySelectorAll('.bi-pencil-square').forEach(icon => {
-        lastReservationId = icon.dataset.reservationId;
+    document.querySelectorAll('.bi-trash').forEach(icon => {
+        icon.onclick = () => lastReservationId = icon.dataset.reservationId;
     });
 }
 
@@ -62,7 +62,7 @@ const editReservation = (event) => {
     loadReservationInfoApiRequest();
 }
 const deleteReservation = (event) => {
-    deleteReservationApiRequest(lastReservationId).then(
+    deleteReservationApiRequest().then(
         () => fetchAndPopulateReservationsApiRequest()
     );
 }
@@ -80,13 +80,13 @@ const fetchAndPopulateReservationsApiRequest = () => {
         .catch(error => console.error('Error fetching reservations:', error));
 }
 
-const deleteReservationApiRequest = (id) => {
-    const deleteReservationsUrl = new URL(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders/${id}`);
+const deleteReservationApiRequest = () => {
+    const deleteReservationsUrl = new URL(`http://exam-2023-1-api.std-900.ist.mospolytech.ru/api/orders/${lastReservationId}`);
     deleteReservationsUrl.searchParams.set('api_key', api_key);
-    return fetch(deleteReservationsUrl , {
+    return fetch(deleteReservationsUrl, {
         method: 'DELETE'
     })
-        .then(res => res.text())
+        .then(res => console.log(res.text()))
         .catch(e => console.log(e))
 
 }
@@ -107,7 +107,7 @@ function loadReservationInfoApiRequest() {
             loadGuidInfoApiRequest(reservation.guide_id);
             document.getElementById('excursionDate').value = reservation.date;
             document.getElementById('routeName').innerText = routeIdsToNamesMap.get(reservation.route_id);
-            document.getElementById('excursionStartTime').value = reservation.time.slice(0,5);
+            document.getElementById('excursionStartTime').value = reservation.time.slice(0, 5);
             document.getElementById('duration').value = reservation.duration;
             document.getElementById('peopleCount').value = reservation.persons;
             document.getElementById('option1').checked = reservation.optionFirst;
@@ -234,7 +234,6 @@ document.getElementById('excursionStartTime').onblur = calculatePrice;
 document.getElementById('confirmDeleteBtn').onclick = deleteReservation;
 
 document.getElementById('modal-submit').onclick = event => {
-    console.log("HERE1")
     const errorMessage = validateRequest()
     if (errorMessage.length !== 0) {
         showAlert(errorMessage, 'alert-danger');
@@ -273,6 +272,7 @@ function updateExcursion() {
             console.error('Error:', error);
         });
 }
+
 const showAlert = (message, alertType) => {
     const alertContainer = document.querySelector('#notifications .container');
     const alertDiv = document.createElement('div');
