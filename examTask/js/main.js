@@ -20,7 +20,7 @@ function fetchAndPopulateRoutes(apiUrl) {
             setupPagination();
             fillRouteFilterOptions();
         })
-        .catch(error => console.error('Error fetching routes:', error));
+        .catch(error => showAlert(error.message, 'alert-danger'));
 }
 
 function fetchAndPopulateGuides() {
@@ -35,7 +35,7 @@ function fetchAndPopulateGuides() {
             fillLanguageOptions();
             populateGuidesTable();
         })
-        .catch(error => console.error('Error fetching guides:', error));
+        .catch(error => showAlert(error.message, 'alert-danger'));
 }
 
 function populateGuidesTable() {
